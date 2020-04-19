@@ -70,5 +70,5 @@ public class ParticipantRestController {
 		return new ResponseEntity<Participant>(participant, HttpStatus.OK);
 
 	}
-
+// dodaje komentarz celem sprawdzenia HEROKU
 }
