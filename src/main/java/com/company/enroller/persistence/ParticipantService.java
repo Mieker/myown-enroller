@@ -41,10 +41,10 @@ public class ParticipantService {
 		transaction.commit();
 		return participant;
 	}
-	
+
 	public void delete(Participant participant) {
 		Transaction transaction = this.session.beginTransaction();
 		session.delete(participant);
 		transaction.commit();
-		}
+	}
 }
