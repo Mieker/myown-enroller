@@ -2,7 +2,6 @@ package com.company.enroller.persistence;
 
 import java.util.Collection;
 
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.springframework.stereotype.Component;
@@ -26,13 +25,10 @@ public class ParticipantService {
 	public Participant findByLogin(String login) {
 		return (Participant) session.get(Participant.class, login);
 
-//		String hql = "FROM Participant P WHERE P.login="+login; - moje
+//		String hql = "FROM Participant P WHERE P.login='"+login+"'";
 //		Query query = connector.getSession().createQuery(hql);
 //		
 //		return (Participant) query.uniqueResult();
-
-//		String hql = "FROM Participant P WHERE P.login='"+login+"'"; - dr Dajda
-//		Query query = connector.getSession().createQuery(hql);
 	}
 
 	public Participant add(Participant participant) {
