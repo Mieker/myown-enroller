@@ -54,11 +54,10 @@ public class MeetingService {
 	}
 
 	public boolean containParticipant(String givenlogin, Meeting meeting) {
-		Collection<?> listOfparticipants = meeting.getParticipants();
+		Collection<Participant> listOfparticipants = meeting.getParticipants();
 		String login;
-		for (Object p : listOfparticipants) {
-			Participant participant = (Participant) p;
-			login = participant.getLogin();
+		for (Participant p : listOfparticipants) {
+			login = p.getLogin();
 			if (givenlogin.equals(login)) {
 				return true;
 			}
@@ -75,10 +74,13 @@ public class MeetingService {
 		session.update(oldOne);
 		transaction.commit();
 	}
-	
-	public void deleteParticipant(Meeting meeting, Participant participant) {
-		Transaction transaction = this.session.beginTransaction();
-		meeting.getParticipants().remove(participant);
-		transaction.commit();
+
+	public void deleteParticipant(Meeting meeting, String login) {
+		Collection<Participant> listOfParticipants = meeting.getParticipants();
+		for (Participant p : listOfParticipants) {
+			if (p.getLogin().equals(login)) {
+				listOfParticipants.remove(p);
+			}
+		}
 	}
 }

@@ -100,7 +100,7 @@ public class MeetingRestController {
 		if (meeting == null || !meetingService.containParticipant(login, meeting)) {
 			return new ResponseEntity(HttpStatus.NOT_FOUND);
 		}
-		meetingService.deleteParticipant(meeting, participant);
+		meetingService.deleteParticipant(meeting, login);
 		return new ResponseEntity<Participant>(participant, HttpStatus.OK);
 	}
 	
