@@ -82,4 +82,26 @@ public class MeetingRestController {
 		meetingService.enlistParticipant(participant, id);
 		return new ResponseEntity<Participant>(participant, HttpStatus.CREATED);
 	}
+	
+	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+	public ResponseEntity<?> updateMeeting(@RequestBody Meeting inputedMeeting, @PathVariable("id") long id) {
+		Meeting meeting = meetingService.findById(id);
+		if (meeting == null) {
+			return new ResponseEntity(HttpStatus.NOT_FOUND);
+		}
+		meetingService.updateMeeting(meeting, inputedMeeting);
+		return new ResponseEntity<Meeting>(meeting, HttpStatus.OK);
+	}
+			
+	@RequestMapping(value = "/{id}/participants/{login}", method = RequestMethod.DELETE)
+	public ResponseEntity<?> deleteParticipant(@PathVariable("id") long id, @PathVariable("login") String login) {
+		Meeting meeting = meetingService.findById(id);
+		Participant participant = meetingService.findParticipantByLogin(login);
+		if (meeting == null || !meetingService.containParticipant(login, meeting)) {
+			return new ResponseEntity(HttpStatus.NOT_FOUND);
+		}
+		meetingService.deleteParticipant(meeting, participant);
+		return new ResponseEntity<Participant>(participant, HttpStatus.OK);
+	}
+	
 }

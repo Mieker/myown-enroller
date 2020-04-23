@@ -65,4 +65,20 @@ public class MeetingService {
 		}
 		return false;
 	}
+
+	public void updateMeeting(Meeting oldOne, Meeting newOne) {
+		// TODO
+		Transaction transaction = this.session.beginTransaction();
+		oldOne.setTitle(newOne.getTitle());
+		oldOne.setDescription(newOne.getDescription());
+		oldOne.setDate(newOne.getDate());
+		session.update(oldOne);
+		transaction.commit();
+	}
+	
+	public void deleteParticipant(Meeting meeting, Participant participant) {
+		Transaction transaction = this.session.beginTransaction();
+		meeting.getParticipants().remove(participant);
+		transaction.commit();
+	}
 }
