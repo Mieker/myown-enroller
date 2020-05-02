@@ -20,7 +20,12 @@ public class MeetingService {
 	}
 
 	public Collection<Meeting> getAll() {
-		String hql = "FROM Meeting";
+//		String hql = "FROM Meeting M WHERE M.title LIKE '%Ti%'";	//only meetings with "word" in title
+//		String hql = "FROM Meeting M WHERE M.title LIKE '%Tio%' OR M.description LIKE '%Tio%'";	//all meetings with "word" in title and descr.
+//		String hql = "From Meeting";						// all meetings
+		String hql = "From Meeting M ORDER BY M.title";		// all meetings sorted by title
+//		String wordToFind = "podzial";
+//		String hql = "FROM Meeting M WHERE M.title LIKE '%" + wordToFind + "%' OR M.description LIKE '%" + wordToFind + "%'";
 		Query query = session.createQuery(hql);
 		return query.list();
 	}
