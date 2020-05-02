@@ -104,4 +104,10 @@ public class MeetingRestController {
 		return new ResponseEntity<Participant>(participant, HttpStatus.OK);
 	}
 	
+	@RequestMapping(value = "/find/{word}", method = RequestMethod.GET)
+	public ResponseEntity<?> findMeeting(@PathVariable("word") String word) {
+		Collection<Meeting> meetings = meetingService.findByWord(word);
+		return new ResponseEntity<Collection<Meeting>>(meetings, HttpStatus.OK);
+	}
+	
 }

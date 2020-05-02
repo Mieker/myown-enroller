@@ -88,4 +88,10 @@ public class MeetingService {
 			}
 		}
 	}
+
+	public Collection<Meeting> findByWord(String word) {
+		String hql = "FROM Meeting M WHERE M.title LIKE '%" + word + "%' OR M.description LIKE '%" + word + "%'";
+		Query query = session.createQuery(hql);
+		return query.list();
+	}
 }
