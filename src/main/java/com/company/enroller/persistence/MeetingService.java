@@ -1,6 +1,7 @@
 package com.company.enroller.persistence;
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 import org.hibernate.Query;
@@ -21,7 +22,7 @@ public class MeetingService {
 	}
 
 	public Collection<Meeting> getAll() {
-		String hql = "From Meeting M ORDER BY M.title";		// all meetings sorted by title
+		String hql = "From Meeting M ORDER BY M.title"; // all meetings sorted by title
 		Query query = session.createQuery(hql);
 		return query.list();
 	}
@@ -75,12 +76,14 @@ public class MeetingService {
 		transaction.commit();
 	}
 
-	public void deleteParticipant(Meeting meeting, String login) {
+	public void deleteParticipantFromMeeting(Meeting meeting, String login) {
 		Collection<Participant> listOfParticipants = meeting.getParticipants();
-		for (Participant p : listOfParticipants) {
+		Iterator<Participant> i = listOfParticipants.iterator();
+		while (i.hasNext()) {
+			Participant p = i.next();
 			if (p.getLogin().equals(login)) {
 				Transaction transaction = this.session.beginTransaction();
-				listOfParticipants.remove(p);
+				i.remove();
 				session.save(meeting);
 				transaction.commit();
 			}
@@ -92,7 +95,7 @@ public class MeetingService {
 		Query query = session.createQuery(hql);
 		return query.list();
 	}
-	
+
 	public Collection<Meeting> findMeetingsByUser(String login) {
 		Collection<Meeting> meetingsResult = new LinkedList<Meeting>();
 		for (Meeting meeting : getAll()) {

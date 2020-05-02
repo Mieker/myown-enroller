@@ -6,6 +6,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.springframework.stereotype.Component;
 
+import com.company.enroller.model.Meeting;
 import com.company.enroller.model.Participant;
 
 @Component("participantService")
@@ -24,11 +25,6 @@ public class ParticipantService {
 
 	public Participant findByLogin(String login) {
 		return (Participant) session.get(Participant.class, login);
-
-//		String hql = "FROM Participant P WHERE P.login='"+login+"'";
-//		Query query = connector.getSession().createQuery(hql);
-//		
-//		return (Participant) query.uniqueResult();
 	}
 
 	public Participant add(Participant participant) {
@@ -39,6 +35,11 @@ public class ParticipantService {
 	}
 
 	public void delete(Participant participant) {
+		MeetingService meetingService = new MeetingService();
+		String login = participant.getLogin();
+		for (Meeting meeting : meetingService.findMeetingsByUser(login)) {
+			meetingService.deleteParticipantFromMeeting(meeting, login);
+		}
 		Transaction transaction = this.session.beginTransaction();
 		session.delete(participant);
 		transaction.commit();

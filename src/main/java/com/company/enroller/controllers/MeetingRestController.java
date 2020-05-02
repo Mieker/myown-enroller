@@ -42,7 +42,6 @@ public class MeetingRestController {
 		if (foundMeeting != null) {
 			return new ResponseEntity("Unable to create. A meeting with id " + meeting.getId() + "already exist.",
 					HttpStatus.CONFLICT);
-
 		}
 		meetingService.add(meeting);
 		return new ResponseEntity<Meeting>(meeting, HttpStatus.CREATED);
@@ -74,7 +73,6 @@ public class MeetingRestController {
 		Participant foundParticipant = meetingService.findParticipantByLogin(participant.getLogin());
 		if (foundParticipant == null) {
 			return new ResponseEntity("Participant not found in DB.", HttpStatus.CONFLICT);
-					
 		}
 		if (meetingService.containParticipant(participant.getLogin(), foundMeeting)) {
 			return new ResponseEntity("Participant already participating in this meeting.", HttpStatus.CONFLICT);
@@ -98,9 +96,9 @@ public class MeetingRestController {
 		Meeting meeting = meetingService.findById(id);
 		Participant participant = meetingService.findParticipantByLogin(login);
 		if (meeting == null || !meetingService.containParticipant(login, meeting)) {
-			return new ResponseEntity(HttpStatus.OK);
+			return new ResponseEntity(HttpStatus.NOT_FOUND);
 		}
-		meetingService.deleteParticipant(meeting, login);
+		meetingService.deleteParticipantFromMeeting(meeting, login);
 		return new ResponseEntity<Participant>(participant, HttpStatus.OK);
 	}
 	
@@ -115,5 +113,4 @@ public class MeetingRestController {
 		Collection<Meeting> meetings = meetingService.findMeetingsByUser(login);
 		return new ResponseEntity<Collection<Meeting>>(meetings, HttpStatus.OK);
 	}
-	
 }
