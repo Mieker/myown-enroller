@@ -1,6 +1,7 @@
 package com.company.enroller.persistence;
 
 import java.util.Collection;
+import java.util.LinkedList;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -20,12 +21,7 @@ public class MeetingService {
 	}
 
 	public Collection<Meeting> getAll() {
-//		String hql = "FROM Meeting M WHERE M.title LIKE '%Ti%'";	//only meetings with "word" in title
-//		String hql = "FROM Meeting M WHERE M.title LIKE '%Tio%' OR M.description LIKE '%Tio%'";	//all meetings with "word" in title and descr.
-//		String hql = "From Meeting";						// all meetings
 		String hql = "From Meeting M ORDER BY M.title";		// all meetings sorted by title
-//		String wordToFind = "podzial";
-//		String hql = "FROM Meeting M WHERE M.title LIKE '%" + wordToFind + "%' OR M.description LIKE '%" + wordToFind + "%'";
 		Query query = session.createQuery(hql);
 		return query.list();
 	}
@@ -71,7 +67,6 @@ public class MeetingService {
 	}
 
 	public void updateMeeting(Meeting oldOne, Meeting newOne) {
-		// TODO
 		Transaction transaction = this.session.beginTransaction();
 		oldOne.setTitle(newOne.getTitle());
 		oldOne.setDescription(newOne.getDescription());
@@ -84,7 +79,10 @@ public class MeetingService {
 		Collection<Participant> listOfParticipants = meeting.getParticipants();
 		for (Participant p : listOfParticipants) {
 			if (p.getLogin().equals(login)) {
+				Transaction transaction = this.session.beginTransaction();
 				listOfParticipants.remove(p);
+				session.save(meeting);
+				transaction.commit();
 			}
 		}
 	}
@@ -93,5 +91,15 @@ public class MeetingService {
 		String hql = "FROM Meeting M WHERE M.title LIKE '%" + word + "%' OR M.description LIKE '%" + word + "%'";
 		Query query = session.createQuery(hql);
 		return query.list();
+	}
+	
+	public Collection<Meeting> findMeetingsByUser(String login) {
+		Collection<Meeting> meetingsResult = new LinkedList<Meeting>();
+		for (Meeting meeting : getAll()) {
+			if (containParticipant(login, meeting)) {
+				meetingsResult.add(meeting);
+			}
+		}
+		return meetingsResult;
 	}
 }

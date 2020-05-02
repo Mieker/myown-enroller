@@ -98,7 +98,7 @@ public class MeetingRestController {
 		Meeting meeting = meetingService.findById(id);
 		Participant participant = meetingService.findParticipantByLogin(login);
 		if (meeting == null || !meetingService.containParticipant(login, meeting)) {
-			return new ResponseEntity(HttpStatus.NOT_FOUND);
+			return new ResponseEntity(HttpStatus.OK);
 		}
 		meetingService.deleteParticipant(meeting, login);
 		return new ResponseEntity<Participant>(participant, HttpStatus.OK);
@@ -107,6 +107,12 @@ public class MeetingRestController {
 	@RequestMapping(value = "/find/{word}", method = RequestMethod.GET)
 	public ResponseEntity<?> findMeeting(@PathVariable("word") String word) {
 		Collection<Meeting> meetings = meetingService.findByWord(word);
+		return new ResponseEntity<Collection<Meeting>>(meetings, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/participant/{login}", method = RequestMethod.GET)
+	public ResponseEntity<?> findUserMeetings(@PathVariable("login") String login) {
+		Collection<Meeting> meetings = meetingService.findMeetingsByUser(login);
 		return new ResponseEntity<Collection<Meeting>>(meetings, HttpStatus.OK);
 	}
 	
